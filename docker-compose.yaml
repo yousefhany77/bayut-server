@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  redis-bayut:
+    image: redis:alpine
+    container_name: redis-bayut-v1
+    restart: always
+    volumes:
+      - redis-data:/data
+    networks:
+      - bayut
+  bayut-api-nodejs:
+    build: 
+      context: .
+      target: production
+    restart: always
+    container_name: bayut-api-v1
+    env_file:
+      - .env
+    networks:
+      - bayut
+    environment:
+      - API_KEY=${API_KEY}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - NODE_ENV=production
+    depends_on:
+      - redis-bayut
+ 
+volumes:
+  redis-data:
+networks:
+  bayut:
+    external: true

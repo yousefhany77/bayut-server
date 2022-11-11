@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  redis-bayut:
+    image: redis:alpine
+    container_name: redis-bayut-development
+    restart: always
+    volumes:
+      - redis-data:/data
+    
+  bayut-api-nodejs:
+    build:
+      context: .
+      target: development
+    restart: always
+    volumes:
+      - ./src:/app/src:ro
+      - ./node_modules:/app/node_modules:ro
+    container_name: bayut-api-development
+    env_file:
+      - .env
+    environment:
+      - API_KEY=${API_KEY}
+      - CORS_ORIGIN=${CORS_ORIGIN}
+      - NODE_ENV=development
+    depends_on:
+      - redis-bayut
+    command: npm run dev
+
+  bayut-client:
+    
+volumes:
+  redis-data:
