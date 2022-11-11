@@ -22,7 +22,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN  : "*",
     methods: ["GET"],
   })
 );
