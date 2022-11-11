@@ -2,6 +2,7 @@ import express from "express";
 import { Request, Response, NextFunction, Application } from "express";
 import { Server } from "http";
 import createHttpError from "http-errors";
+const helmet = require("helmet");
 const Redis = require("ioredis");
 const cors = require("cors");
 const client = new Redis({
@@ -13,15 +14,24 @@ const client = new Redis({
 require("dotenv").config();
 const app: Application = express();
 
-const allowedOrigins = ["http://bayut-client:3000", "http://localhost:3000" ,"127.0.0.1:3000"];
+const allowedOrigins = [
+  "http://146.190.32.28",
+  "http://localhost:3000",
+  "http://localhost",
+];
 
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET"],
-}));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    methods: ["GET"],
+  })
+);
+
+app.use(helmet());
 app.get("/", async (req: Request, res: Response) => {
   res.send("Hello World3!🌏");
 });
+
 // Routes
 app.use("/auto-complete", require("./routes/auto-complete"));
 app.use("/properties", require("./routes/properties"));
