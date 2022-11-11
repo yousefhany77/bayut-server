@@ -15,8 +15,6 @@ services:
       target: production
     restart: always
     container_name: bayut-api-v1
-    ports:
-      - 4000:4000
     env_file:
       - .env
     networks:
